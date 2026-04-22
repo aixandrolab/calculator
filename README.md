@@ -145,6 +145,38 @@ Place your `icon.png` file in:
 
 The application will automatically use it for the window and dialogs.
 
+### Adding Desktop Entry
+
+If you want to add entry on your desktop, create file `calculator.desktop` and copy this:
+
+```text
+[Desktop Entry]
+Version=1.0.0
+Type=Application
+Name=Modern Calculator
+Comment=A beautiful and functional calculator
+Exec=/home/user/PycharmProjects/calculator/.venv/bin/python /home/user/PycharmProjects/calculator/app.py
+Icon=/home/user/PycharmProjects/calculator/data/icons/icon.png
+Terminal=false
+Categories=Utility;Calculator;
+StartupNotify=true
+```
+
+If you have troubles with run entry, use this commands:
+
+```bash
+chmod +x ~/Desktop/calculator.desktop
+
+# or
+
+gio set ~/Desktop/calculator.desktop metadata::trusted true
+```
+
+or use my script:
+
+```bash
+. install_desktop_shortcut.sh
+```
 ---
 
 ## 📝 License
