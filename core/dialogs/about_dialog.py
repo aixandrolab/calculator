@@ -44,7 +44,7 @@ class AboutDialog(QDialog):
         title.setStyleSheet("color: #ff9500;")
         layout.addWidget(title)
 
-        version = QLabel("Version 1.0.0")
+        version = QLabel("Version 1.0.1")
         version.setFont(QFont("Segoe UI", 12))
         version.setAlignment(Qt.AlignmentFlag.AlignCenter)
         version.setStyleSheet("color: #a6a6a6;")
@@ -54,6 +54,7 @@ class AboutDialog(QDialog):
             "A beautiful and functional calculator\n"
             "built with PyQt6\n\n"
             "Features:\n"
+            "• Linux desktop entry creation\n"
             "• Modern dark theme\n"
             "• Keyboard shortcuts\n"
             "• Scientific notation\n"

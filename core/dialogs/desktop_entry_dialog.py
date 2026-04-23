@@ -1,0 +1,327 @@
+# Copyright (©) 2026, Alexander Suvorov. All rights reserved.
+import os
+import sys
+
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont, QPalette, QColor
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QGroupBox, QCheckBox, QHBoxLayout, QPushButton, QMessageBox
+
+from core import __version__ as ver
+
+
+class DesktopEntryDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.parent = parent
+        self.setWindowTitle("Create Desktop Entry")
+        self.setMinimumWidth(550)
+        self.setModal(True)
+
+        # Set dark theme for dialog
+        self.setup_dark_theme()
+
+        self.app_name = "Modern Calculator"
+        self.app_executable = sys.executable
+        self.app_path = os.path.abspath(sys.argv[0])
+        self.icon_path = self.find_icon_path()
+
+        self.setup_ui()
+        self.center_dialog()
+
+    def setup_dark_theme(self):
+        """Apply dark theme to dialog"""
+        self.setStyleSheet("""
+            QDialog {
+                background-color: #2d2d2d;
+            }
+            QLabel {
+                color: #ffffff;
+                background-color: transparent;
+            }
+            QGroupBox {
+                color: #ff9500;
+                border: 1px solid #444444;
+                border-radius: 8px;
+                margin-top: 1ex;
+                font-weight: bold;
+                background-color: #1a1a1a;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px 0 5px;
+                color: #ff9500;
+            }
+            QCheckBox {
+                color: #ffffff;
+                spacing: 8px;
+                background-color: transparent;
+            }
+            QCheckBox::indicator {
+                width: 18px;
+                height: 18px;
+                border-radius: 4px;
+                border: 2px solid #ff9500;
+                background-color: #333333;
+            }
+            QCheckBox::indicator:hover {
+                border-color: #ffaa33;
+                background-color: #444444;
+            }
+            QCheckBox::indicator:checked {
+                background-color: #ff9500;
+                border-color: #ff9500;
+            }
+            QPushButton {
+                background-color: #333333;
+                color: #ffffff;
+                border: none;
+                border-radius: 20px;
+                padding: 8px 16px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #444444;
+            }
+            QPushButton:pressed {
+                background-color: #222222;
+            }
+        """)
+
+    def find_icon_path(self):
+        possible_paths = [
+            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "data", "icons",
+                         "icon.png"),
+            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "icons", "icon.png"),
+            os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "icons", "icon.png"),
+            os.path.join(os.path.dirname(__file__), "..", "..", "data", "icons", "icon.png"),
+            os.path.join(os.path.dirname(sys.argv[0]), "data", "icons", "icon.png"),
+        ]
+
+        for path in possible_paths:
+            if os.path.exists(path):
+                return path
+        return ""
+
+    def setup_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setSpacing(15)
+        layout.setContentsMargins(25, 25, 25, 25)
+
+        # Title with icon emoji
+        title_label = QLabel("📌 Create Desktop Entry")
+        title_font = QFont()
+        title_font.setPointSize(16)
+        title_font.setBold(True)
+        title_label.setFont(title_font)
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title_label.setStyleSheet("color: #ff9500; margin: 10px 0px; padding: 5px;")
+        layout.addWidget(title_label)
+
+        # Information Group
+        info_group = QGroupBox("📋 Application Information")
+        info_layout = QVBoxLayout(info_group)
+        info_layout.setSpacing(10)
+        info_layout.setContentsMargins(15, 20, 15, 15)
+
+        # App info text with custom styling
+        info_text = QLabel(
+            f"<span style='color:#ff9500; font-weight:bold;'>📱 Name:</span> <span style='color:#ffffff;'>{self.app_name}</span><br>"
+            f"<span style='color:#ff9500; font-weight:bold;'>📍 Path:</span> <span style='color:#a6a6a6; font-family:monospace;'>{self.app_path}</span><br>"
+            f"<span style='color:#ff9500; font-weight:bold;'>🎨 Icon:</span> <span style='color:#a6a6a6;'>{self.icon_path if self.icon_path else '⚠️ Not found'}</span>"
+        )
+        info_text.setTextFormat(Qt.TextFormat.RichText)
+        info_text.setWordWrap(True)
+        info_layout.addWidget(info_text)
+
+        layout.addWidget(info_group)
+
+        # Options Group
+        options_group = QGroupBox("🎯 Create shortcuts in:")
+        options_layout = QVBoxLayout(options_group)
+        options_layout.setSpacing(12)
+        options_layout.setContentsMargins(15, 20, 15, 15)
+
+        self.app_menu_checkbox = QCheckBox("📁 Application Menu (~/.local/share/applications/)")
+        self.app_menu_checkbox.setChecked(True)
+        options_layout.addWidget(self.app_menu_checkbox)
+
+        self.desktop_checkbox = QCheckBox("🖥️ Desktop (~/Desktop/)")
+        self.desktop_checkbox.setChecked(False)
+        options_layout.addWidget(self.desktop_checkbox)
+
+        layout.addWidget(options_group)
+
+        # Note with dark theme styling
+        note_label = QLabel(
+            "💡 <b>Note:</b> After creation, you may need to log out and back in "
+            "or restart your desktop for the entry to appear in the menu."
+        )
+        note_label.setTextFormat(Qt.TextFormat.RichText)
+        note_label.setWordWrap(True)
+        note_label.setStyleSheet("""
+            QLabel {
+                color: #ffaa33;
+                background-color: #1a1a1a;
+                padding: 12px;
+                border-radius: 8px;
+                border: 1px solid #ff9500;
+            }
+        """)
+        layout.addWidget(note_label)
+
+        # Button layout
+        button_layout = QHBoxLayout()
+        button_layout.setSpacing(15)
+
+        self.create_btn = QPushButton("✓ Create Entry")
+        self.create_btn.setMinimumHeight(45)
+        self.create_btn.setMinimumWidth(120)
+        self.create_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #ff9500;
+                color: #1a1a1a;
+                font-weight: bold;
+                border-radius: 22px;
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+            QPushButton:hover {
+                background-color: #ffaa33;
+            }
+            QPushButton:pressed {
+                background-color: #cc7700;
+            }
+        """)
+        self.create_btn.clicked.connect(self.create_desktop_entry)
+
+        self.cancel_btn = QPushButton("✗ Cancel")
+        self.cancel_btn.setMinimumHeight(45)
+        self.cancel_btn.setMinimumWidth(120)
+        self.cancel_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #444444;
+                color: #ffffff;
+                border-radius: 22px;
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+            QPushButton:hover {
+                background-color: #555555;
+            }
+            QPushButton:pressed {
+                background-color: #333333;
+            }
+        """)
+        self.cancel_btn.clicked.connect(self.reject)
+
+        button_layout.addStretch()
+        button_layout.addWidget(self.create_btn)
+        button_layout.addWidget(self.cancel_btn)
+        button_layout.addStretch()
+        layout.addLayout(button_layout)
+
+    def center_dialog(self):
+        if self.parent:
+            x = self.parent.x() + (self.parent.width() - self.width()) // 2
+            y = self.parent.y() + (self.parent.height() - self.height()) // 2
+            self.move(x, y)
+
+    def create_desktop_entry(self):
+        created_files = []
+        errors = []
+
+        if self.app_menu_checkbox.isChecked():
+            success, message = self.create_app_menu_entry()
+            if success:
+                created_files.append(message)
+            else:
+                errors.append(message)
+
+        if self.desktop_checkbox.isChecked():
+            success, message = self.create_desktop_shortcut()
+            if success:
+                created_files.append(message)
+            else:
+                errors.append(message)
+
+        if created_files and not errors:
+            QMessageBox.information(
+                self,
+                "Success",
+                f"✅ Desktop entry created successfully!\n\n"
+                f"Created:\n" + "\n".join(f"• {f}" for f in created_files)
+            )
+            self.accept()
+        elif created_files and errors:
+            QMessageBox.warning(
+                self,
+                "Partial Success",
+                f"⚠️ Some entries were created with issues:\n\n"
+                f"✅ Created:\n" + "\n".join(f"• {f}" for f in created_files) +
+                f"\n\n❌ Errors:\n" + "\n".join(f"• {e}" for e in errors)
+            )
+            self.accept()
+        elif errors:
+            QMessageBox.critical(
+                self,
+                "Error",
+                f"❌ Failed to create desktop entries:\n\n" + "\n".join(f"• {e}" for e in errors)
+            )
+
+    def create_app_menu_entry(self):
+        try:
+            desktop_dir = os.path.expanduser("~/.local/share/applications")
+            os.makedirs(desktop_dir, exist_ok=True)
+
+            desktop_file = os.path.join(desktop_dir, "modern-calculator.desktop")
+
+            content = self.generate_desktop_content()
+
+            with open(desktop_file, 'w', encoding='utf-8') as f:
+                f.write(content)
+
+            os.chmod(desktop_file, 0o755)
+
+            return True, desktop_file
+
+        except Exception as e:
+            return False, str(e)
+
+    def create_desktop_shortcut(self):
+        try:
+            desktop_dir = os.path.expanduser("~/Desktop")
+            os.makedirs(desktop_dir, exist_ok=True)
+
+            desktop_file = os.path.join(desktop_dir, "modern-calculator.desktop")
+
+            content = self.generate_desktop_content()
+
+            with open(desktop_file, 'w', encoding='utf-8') as f:
+                f.write(content)
+
+            os.chmod(desktop_file, 0o755)
+
+            return True, desktop_file
+
+        except Exception as e:
+            return False, str(e)
+
+    def generate_desktop_content(self):
+        python_exec = sys.executable
+
+        exec_line = f'"{python_exec}" "{self.app_path}"'
+
+        content = f"""[Desktop Entry]
+Version={ver}
+Type=Application
+Name={self.app_name}
+Comment=A beautiful and functional calculator built with PyQt6, featuring a modern dark theme, keyboard shortcuts, and scientific notation support.
+Exec={exec_line}
+Icon={self.icon_path if self.icon_path else 'system-run'}
+Terminal=false
+Categories=Utility;Calculator;Math;
+StartupNotify=true
+Keywords=calculator;math;arithmetic;
+"""
+        return content

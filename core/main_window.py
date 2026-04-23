@@ -1,5 +1,7 @@
 # Copyright (c) 2023-2026, Alexander Suvorov. All rights reserved.
 import os
+import sys
+
 from PyQt6.QtWidgets import (
     QMainWindow,
     QWidget,
@@ -70,10 +72,22 @@ class MainWindow(QMainWindow):
             icon = QIcon(icon_path)
             self.setWindowIcon(icon)
 
+    def create_desktop_entry(self):
+        from core.dialogs.desktop_entry_dialog import DesktopEntryDialog
+
+        dialog = DesktopEntryDialog(self)
+        dialog.exec()
+
     def setup_menu_bar(self):
         menubar = self.menuBar()
 
         file_menu = menubar.addMenu("File")
+
+        if sys.platform.startswith('linux'):
+            desktop_entry_action = QAction('Create Desktop Entry...', self)
+            desktop_entry_action.triggered.connect(self.create_desktop_entry)
+            file_menu.addAction(desktop_entry_action)
+            file_menu.addSeparator()
 
         exit_action = QAction("Exit", self)
         exit_action.setShortcut("Ctrl+Q")

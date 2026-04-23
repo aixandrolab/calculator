@@ -1,4 +1,4 @@
-# 🧮 Modern Calculator
+# 🧮 Modern Calculator <sup>v1.0.1</sup>
 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/aixandrolab/calculator)](https://github.com/aixandrolab/calculator/)
 ![GitHub top language](https://img.shields.io/github/languages/top/aixandrolab/calculator)
@@ -31,6 +31,33 @@ A beautiful and functional calculator built with PyQt6, featuring a modern dark 
 - **Scientific Notation** - Automatically switches to scientific notation for large numbers
 - **Error Handling** - Proper error handling for division by zero and invalid operations
 - **Responsive Design** - Clean and intuitive button layout
+
+---
+
+### Desktop Integration (Linux)
+
+**Creating Application Shortcuts:**
+
+The application allows you to create desktop entries directly from the menu:
+
+1. **Go to File → Create Desktop Entry**
+2. **Choose locations:**
+   - ✓ Application Menu (`~/.local/share/applications/`) - adds to system app menu
+   - □ Desktop (`~/Desktop/`) - creates shortcut on desktop
+3. **Click "Create Entry"**
+
+**What happens:**
+- Creates `.desktop` file(s) with proper configuration
+- Sets executable permissions automatically
+- Uses application icon if available
+
+**After creation:**
+- **Application Menu**: Log out and back in (or restart desktop) for entry to appear
+- **Desktop shortcut**: May show "Unsecured Application Launcher" warning
+  - Right-click on shortcut → "Allow Launching" or "Trust"
+  - This is a one-time security confirmation
+
+**Note:** This feature is only available on Linux systems with desktop environments that support `.desktop` files (GNOME, KDE, XFCE, etc.).
 
 ---
 
@@ -145,38 +172,6 @@ Place your `icon.png` file in:
 
 The application will automatically use it for the window and dialogs.
 
-### Adding Desktop Entry
-
-If you want to add entry on your desktop, create file `calculator.desktop` and copy this:
-
-```text
-[Desktop Entry]
-Version=1.0.0
-Type=Application
-Name=Modern Calculator
-Comment=A beautiful and functional calculator
-Exec=/home/user/PycharmProjects/calculator/.venv/bin/python /home/user/PycharmProjects/calculator/app.py
-Icon=/home/user/PycharmProjects/calculator/data/icons/icon.png
-Terminal=false
-Categories=Utility;Calculator;
-StartupNotify=true
-```
-
-If you have troubles with run entry, use this commands:
-
-```bash
-chmod +x ~/Desktop/calculator.desktop
-
-# or
-
-gio set ~/Desktop/calculator.desktop metadata::trusted true
-```
-
-or use my script:
-
-```bash
-. install_desktop_shortcut.sh
-```
 ---
 
 ## 📝 License
