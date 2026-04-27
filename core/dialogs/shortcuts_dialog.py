@@ -67,6 +67,7 @@ class ShortcutsDialog(QDialog):
             <tr><td class="shortcut-key">. or ,</td><td class="shortcut-desc">Decimal point</td>\n
             <tr><td class="shortcut-key">+ - * /</td><td class="shortcut-desc">Operators</td>\n
             <tr><td class="shortcut-key">Enter or =</td><td class="shortcut-desc">Calculate result</td>\n
+            <tr><td class="shortcut-key">Backspace</td><td class="shortcut-desc">Clear single number</td>\n
         </table>
 
         <h3 style="color: #ff9500; margin-top: 15px;">⚡ Special Functions</h3>

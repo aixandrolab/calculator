@@ -88,6 +88,7 @@ class HelpDialog(QDialog):
         <h2>💡 Tips</h2>
         <p>• Use <b>decimal point (.)</b> for floating point numbers<br>
         • Press <b>=</b> or <b>Enter</b> to get result<br>
+        • Press <b>Backspace</b> to clear single number<br>
         • Press <b>AC</b> or <b>Esc</b> to clear<br>
         • Keyboard shortcuts available - press <b>Ctrl+/</b></p>
 

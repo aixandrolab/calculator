@@ -44,7 +44,7 @@ class AboutDialog(QDialog):
         title.setStyleSheet("color: #ff9500;")
         layout.addWidget(title)
 
-        version = QLabel("Version 1.0.1")
+        version = QLabel("Version 1.0.2")
         version.setFont(QFont("Segoe UI", 12))
         version.setAlignment(Qt.AlignmentFlag.AlignCenter)
         version.setStyleSheet("color: #a6a6a6;")

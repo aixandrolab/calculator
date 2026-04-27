@@ -1,4 +1,4 @@
-# 🧮 Modern Calculator <sup>v1.0.1</sup>
+# 🧮 Modern Calculator <sup>v1.0.2</sup>
 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/aixandrolab/calculator)](https://github.com/aixandrolab/calculator/)
 ![GitHub top language](https://img.shields.io/github/languages/top/aixandrolab/calculator)

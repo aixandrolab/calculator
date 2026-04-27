@@ -224,6 +224,25 @@ class MainWindow(QMainWindow):
 
     def keyPressEvent(self, event):
         key = event.text()
+        key_code = event.key()
+
+        if key_code == Qt.Key.Key_Backspace:
+            self.handle_backspace()
+            self.update_display()
+            event.accept()
+            return
+
+        if key_code == Qt.Key.Key_Escape:
+            self.handle_button("AC")
+            self.update_display()
+            event.accept()
+            return
+
+        if key_code == Qt.Key.Key_Return or key_code == Qt.Key.Key_Enter:
+            self.handle_button("=")
+            self.update_display()
+            event.accept()
+            return
 
         if key.isdigit():
             self.handle_button(key)
@@ -268,13 +287,31 @@ class MainWindow(QMainWindow):
 
         self.update_display()
 
+    def handle_backspace(self):
+        if self.waiting_for_operand:
+            return
+
+        if len(self.current_number) > 1:
+            self.current_number = self.current_number[:-1]
+        else:
+            self.current_number = "0"
+            self.waiting_for_operand = True
+
     def handle_number(self, number):
         if self.waiting_for_operand:
-            self.current_number = number
+            if number == ".":
+                self.current_number = "0."
+            else:
+                self.current_number = number
             self.waiting_for_operand = False
         else:
+            if self.current_number == "0" and number != ".":
+                self.current_number = number
+                return
+
             if number == "." and "." in self.current_number:
                 return
+
             self.current_number += number
 
         if len(self.current_number) > 15:
